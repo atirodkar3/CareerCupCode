@@ -1,91 +1,123 @@
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.util.StringTokenizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.TreeMap;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Scanner;
 
 public class spotifyZipf {
-
-    public static void main(String[] args) throws IOException {	    
-	    ArrayList<ArrayList<String>> inputFile = new ArrayList<ArrayList<String>>();
-	    ArrayList<Double> zipfCount = new ArrayList<Double>();
-		ArrayList<String> mostPlayedSongs = new ArrayList<String>();
-		inputFile = fileReader();
-	    
-        if(inputFile == null) {
-		    System.out.println("Invalid Input");
-		} else {
-            zipfCount = getZipfCount(inputFile);
-			mostPlayedSongs = getMostPlayedSongs(zipfCount, inputFile);
-		    printFunction(mostPlayedSongs);
-		}		
-	}
-
-    public static ArrayList<ArrayList<String>> fileReader() throws IOException {
-	    Scanner scanner = new Scanner(System.in);        
-		ArrayList<ArrayList<String>> fileContents = new ArrayList<ArrayList<String>>();
-	
-	    try{				    
-            String currentLine = scanner.nextLine();				
-            ArrayList<String> fileRow = new ArrayList(Arrays.asList(currentLine.split(" ")));
-            fileContents.add(fileRow);
-			int numberOfInputLines = Integer.parseInt(fileRow.get(0));
-			int numberOfOutputLines = Integer.parseInt(fileRow.get(1));
-			if (numberOfInputLines < numberOfOutputLines) {
-			    return null;
-			}
-			
-            for (int lineCount = 0; lineCount < numberOfInputLines; lineCount++) {
-			    currentLine = scanner.nextLine();				
-                fileRow = new ArrayList(Arrays.asList(currentLine.split(" ")));
-                fileContents.add(fileRow);			    			
-			}            
-		} catch(Exception e) { 
-            System.out.println("Read Error");		
-			return null;
-		} finally {
-		    scanner.close();
-		}	    
-		return fileContents;
-	}
-	
-	public static ArrayList<Double> getZipfCount(ArrayList<ArrayList<String>> inputFile) {
-	    ArrayList<Double> zipfCount = new ArrayList<Double>();
-		int numberOfSongs = Integer.parseInt(inputFile.get(0).get(0));
-		long playCountSong1 = Long.parseLong(inputFile.get(1).get(0));
-		for (int songNumber = 1; songNumber <= numberOfSongs; songNumber++) {
-		    zipfCount.add( (double)(playCountSong1 / (songNumber)) );					
-		}				
-		return zipfCount;		
-	}
-	
-	public static ArrayList<String> getMostPlayedSongs(ArrayList<Double> zipfCount, ArrayList<ArrayList<String>> inputFile) {
-	    int numberOfSongs = Integer.parseInt(inputFile.get(0).get(0));
+	static ArrayList<ArrayList<String>> inputFile = new ArrayList<ArrayList<String>>();	    
+    public static void main(String[] args) throws IOException {	    	
+        Kattio io = new Kattio(System.in, System.out);    
+        int songCount = io.getInt();
+		int threshold = io.getInt();
 		
-		ArrayList<String> mostPlayedSongs = new ArrayList<String>();
-		Map<Double, String> songsBetterThanZipfCount = new TreeMap<Double, String>();
-		for (int songNumber = 0; songNumber < numberOfSongs; songNumber++) {
-            songsBetterThanZipfCount.put((Double.parseDouble(inputFile.get(songNumber + 1).get(0)) / zipfCount.get(songNumber))  , inputFile.get(songNumber + 1).get(1).trim());                  
+		Row[] arrayOfSongs = new Row[songCount];
+
+		for (int songNumber = 0; songNumber < songCount; songNumber++) {
+		    long playCount = io.getLong();
+			String songName = io.getWord();
+		    double quality = playCount * (songNumber + 1);
+		    arrayOfSongs[songNumber] = new Row(quality, songNumber, songName);
 		}		
 		
-		int songCount = 0;
-		int topSongThreshold = Integer.parseInt(inputFile.get(0).get(1));
-		
-		ArrayList<Double> songKey = new ArrayList<Double>(songsBetterThanZipfCount.keySet());
-        for(int song = songKey.size() - 1; song > songKey.size() - topSongThreshold - 1; song--) {		    
-            mostPlayedSongs.add(songsBetterThanZipfCount.get(songKey.get(song)));
-        }		
-	
-		return mostPlayedSongs;
+		Arrays.sort(arrayOfSongs);
+		for(int topSong = arrayOfSongs.length - 1; topSong > songCount - threshold - 1; topSong--) {
+		    io.println(arrayOfSongs[topSong].songName);			
+		}
+		io.close();
 	}
 
-    public static void printFunction(ArrayList<String> songList) {
-        for (int song = 0; song < songList.size(); song++) {
-		    System.out.println(songList.get(song));
-	    }	
-    }	
+	static class Row implements Comparable<Row> {
+	    double quality;
+		long songNumber;
+		String songName;
+		
+		Row(double quality, long songNumber, String songName) {
+		    this.quality = quality; 
+		    this.songNumber = songNumber;
+			this.songName = songName;
+		}
+		
+		public int compareTo(Row row) {
+            if(quality > row.quality) 
+				return 1;
+			else if (quality == row.quality) 
+			    if(songNumber < row.songNumber) {
+				    return 1;
+				} else {
+				    return -1;
+				}
+            else {
+                return -1;
+            }			
+		}
+	}
+
+	static class Kattio extends PrintWriter {
+		public Kattio(InputStream i) {
+			super(new BufferedOutputStream(System.out));
+			r = new BufferedReader(new InputStreamReader(i));
+		}
+
+		public Kattio(InputStream i, OutputStream o) {
+			super(new BufferedOutputStream(o));
+			r = new BufferedReader(new InputStreamReader(i));
+		}
+
+		public boolean hasMoreTokens() {
+			return peekToken() != null;
+		}
+
+		public int getInt() {
+			return Integer.parseInt(nextToken());
+		}
+
+		public double getDouble() {
+			return Double.parseDouble(nextToken());
+		}
+
+		public long getLong() {
+			return Long.parseLong(nextToken());
+		}
+
+		public String getWord() {
+			return nextToken();
+		}
+
+		private BufferedReader r;
+		private String line;
+		private StringTokenizer st;
+		private String token;
+
+		private String peekToken() {
+			if (token == null)
+				try {
+					while (st == null || !st.hasMoreTokens()) {
+						line = r.readLine();
+						if (line == null)
+							return null;
+						st = new StringTokenizer(line);
+					}
+					token = st.nextToken();
+				} catch (IOException e) {
+				}
+			return token;
+		}
+
+		private String nextToken() {
+			String ans = peekToken();
+			token = null;
+			return ans;
+		}
+	}	
 }
