@@ -31,6 +31,8 @@ public class ReplaceSpaces {
     }
 System.out.println("Final String "+ssv);
 
+System.out.println(ss.replaceAll(" ","%TEST%"));
+
 }
     
     

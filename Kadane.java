@@ -3,6 +3,7 @@ import java.util.Arrays;
 class Kadane {
 
     public static void main(String[] args) {
+	
 	    Integer[] input = new Integer[]{ -8, -2, 14, -2, 88, -9};
 		
 		int maxEndingHere = 0;
@@ -25,5 +26,4 @@ class Kadane {
 	    Integer[] outputArray = Arrays.copyOfRange(input, startPoint, endPoint);
         System.out.println(Arrays.toString(outputArray)); 
 	}
-
 }
