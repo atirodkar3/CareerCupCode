@@ -13,7 +13,7 @@ class HashSetOrder {
 		Collections.addAll(treeSet,arrayInt);
 				
         System.out.println(Arrays.deepToString(linkedSet.toArray()));
-	    System.out.println(Arrays.deepToString(treeSet.toArray()));
+        System.out.println(Arrays.deepToString(treeSet.toArray()));
 	
     }
 }
