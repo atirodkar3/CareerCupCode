@@ -9,7 +9,7 @@ class BinarySearch {
         System.out.println(BinarySearch(test0, 0));
 
         System.out.println("\nTest with all Duplicates");
-        int[] test1 = new int[]{1, 1, 1, 1, 1};
+        int[] test1 = new int[]{1, 1, 1, 1};
         System.out.println(BinarySearch(test1, 1));
 	System.out.println(BinarySearch(test1, 0));
 

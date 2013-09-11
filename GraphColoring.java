@@ -15,16 +15,16 @@ class GraphColoring {
 	private static HashMap<String, ArrayList<String>> colors() {
 	    HashMap<String, ArrayList<String>> colorMap = new HashMap<String, ArrayList<String>>();
 
-		ArrayList<String> colorList = new ArrayList<String>();
-        colorList.add("Red");		
-        colorList.add("Blue");		
-		colorList.add("Green");		
+	    ArrayList<String> colorList = new ArrayList<String>();
+            colorList.add("Red");		
+            colorList.add("Blue");		
+	    colorList.add("Green");		
 		//Add Color Here
 		
-        colorMap.put("Colors", colorList);
-        colorMap.put("Red", new ArrayList<String>());
-    	colorMap.put("Blue", new ArrayList<String>());
-		colorMap.put("Green", new ArrayList<String>());
+            colorMap.put("Colors", colorList);
+            colorMap.put("Red", new ArrayList<String>());
+    	    colorMap.put("Blue", new ArrayList<String>());
+       	    colorMap.put("Green", new ArrayList<String>());
 		//Add Color Here
         
 		return colorMap;

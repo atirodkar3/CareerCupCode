@@ -8,8 +8,6 @@ class AnagramCheck {
     public static void main(String[] args){
         String[] input = new String[]{"art", "rat", "bats", "banana", "stab", "tar"};
 
-//{"ram", "test", "arm", "protest", "prootest", "testpro", "cc", "bd"};
-      
         HashMap<Integer, ArrayList<String>> wordList = new HashMap<Integer, ArrayList<String>>();
         for(int i = 0; i < input.length; i++) {
             int asciiValue = 0;

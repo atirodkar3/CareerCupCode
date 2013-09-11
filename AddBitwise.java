@@ -6,13 +6,13 @@ class AddBitwise {
         System.out.println(add(0, 2));
     }
 
-    private static int add(int a, int b) {
-        if(b == 0) {
-            return a;
+    private static int add(int sum, int carry) {
+        if(carry == 0) {
+            return sum;
         }
 
-        int sum = a ^ b;
-        int carry = (a & b) << 1;
+        sum = sum ^ carry;
+        carry = (sum & carry) << 1;
         return add(sum, carry);
     }
 
