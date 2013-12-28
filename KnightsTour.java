@@ -71,11 +71,15 @@ class Knight {
             int startX = 1 + (int)(Math.random() * ((length) - 1));
             int startY = 1 + (int)(Math.random() * ((length) - 1));
             startPos = new Position(startX, startY);
-            int iterVal = iterateTour(table, startPos);
+            int iterVal = iterateTour(table, startPos) - 1;
             if(iterVal > bestVal) {
                 table.displayTable();
                 bestTable = table;
                 bestVal = iterVal;
+                if(iterVal == 64) {
+                    System.out.println("Iteration Number : " + testNum);
+                    testNum = 10000002;
+                }
             }
         }
         System.out.println(bestVal);
@@ -98,16 +102,31 @@ class Knight {
         int y = currentPosition.getY();
 
         LinkedList<Position> possiblePositions = getListOfPossiblePositions(x, y, table);        
-        return decidePosition(possiblePositions);
+        return decidePosition(possiblePositions, table);
     }
 
-    private Position decidePosition(LinkedList<Position> openPositions) {
+    private Position decidePosition(LinkedList<Position> openPositions, Table table) {
         // Define Algorithm
-
+        int algo = 2;
+        int pos = 0;
         if(openPositions.size() == 0) {
             return null;
         } else {
-            int pos = (int)(Math.random() * (openPositions.size()));
+            if(algo == 1) {
+                pos = (int)(Math.random() * (openPositions.size()));
+            } else if(algo == 2) {
+                int valToChoose = 0;
+                int minMoves = 9999;
+                for(int mov = 0; mov < openPositions.size(); mov++) {
+                    Position checkPos = openPositions.get(mov);
+                    int posMoves = getListOfPossiblePositions(checkPos.getX(), checkPos.getY(), table).size();   
+                    if(posMoves < minMoves) {
+                        valToChoose = mov;
+                        minMoves = posMoves;
+                    }
+                }
+                pos = valToChoose;
+            }
             return openPositions.get(pos);
         }
     }

@@ -25,8 +25,4 @@ class Kadane {
 	    Integer[] outputArray = Arrays.copyOfRange(input, startPoint, endPoint);
             System.out.println(Arrays.toString(outputArray)); 
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 9f5396fa69c1a4a61c7ee1aed5044d5a975c7fe2
